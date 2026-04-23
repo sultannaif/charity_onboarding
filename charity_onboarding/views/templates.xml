@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="onboarding_page_template" name="Beneficiary Onboarding">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure p-4 bg-light">
+                <div class="container mt-5 shadow-lg p-5 bg-white rounded" style="max-width: 800px;">
+                    <h2 class="text-center mb-4 text-primary">نموذج التسجيل في المسارات التدريبية 🚀</h2>
+                    <form action="/beneficiary/onboarding/submit" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        
+                        <div class="row text-start">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">تاريخ الميلاد</label>
+                                <input type="date" name="birth_date" class="form-control" required="1"/>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">حالة المتدرب</label>
+                                <select name="trainee_status" class="form-select" required="1">
+                                    <option value="unemployed">باحث عن عمل</option>
+                                    <option value="graduate">خريج</option>
+                                    <option value="student">طالب</option>
+                                    <option value="employee">موظف</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 text-start">
+                            <label class="form-label fw-bold">حدد المسار المراد تطويره</label>
+                            <select id="path_select" name="path" class="form-select form-control-lg" required="1" onchange="updateSkills()">
+                                <option value="">إختر المسار...</option>
+                                <option value="office">المسار المكتبي</option>
+                                <option value="technical">المسار الفني</option>
+                                <option value="handicraft">المسار الحرفي</option>
+                            </select>
+                        </div>
+
+                        <div id="skills_section" class="mb-4 d-none text-start">
+                            <label class="form-label fw-bold border-bottom pb-2 d-block">حدد المهارات (يمكنك اختيار أكثر من واحدة)</label>
+                            <div id="skills_options" class="row p-3 rounded bg-light">
+                                </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm mt-3">إرسال الطلب للمراجعة</button>
+                    </form>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                function updateSkills() {
+                    var path = document.getElementById('path_select').value;
+                    var section = document.getElementById('skills_section');
+                    var options = document.getElementById('skills_options');
+                    options.innerHTML = '';
+                    
+                    var skillsMap = {
+                        'office': ['السكرتاريه', 'ادخال البيانات المكتبية'],
+                        'technical': ['التسويق الالكتروني', 'التصميم الجرافيك', 'تصميم المؤثرات', 'التصوير الفوتوغرافي'],
+                        'handicraft': ['الخط العربي', 'صناعة العطور', 'صيانة الاجهزه', 'الصيانه المنزليه']
+                    };
+
+                    if (path &amp;&amp; skillsMap[path]) {
+                        section.classList.remove('d-none');
+                        skillsMap[path].forEach(function(skill) {
+                            var col = document.createElement('div');
+                            col.className = 'col-md-6 mb-2';
+                            col.innerHTML = '<div class="form-check">' +
+                                '<input class="form-check-input" type="checkbox" name="skills" value="' + skill + '" id="' + skill + '">' +
+                                '<label class="form-check-label ms-2" for="' + skill + '">' + skill + '</label>' +
+                            '</div>';
+                            options.appendChild(col);
+                        });
+                    } else {
+                        section.classList.add('d-none');
+                    }
+                }
+            </script>
+        </t>
+    </template>
+</odoo>
