@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_charity" model="ir.ui.view">
+        <field name="name">res.partner.form.charity</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="بيانات المستفيد" invisible="not is_beneficiary">
+                    <group>
+                        <group string="المعلومات الأساسية">
+                            <field name="onboarding_status" widget="badge" decoration-info="onboarding_status == 'pending'" decoration-success="onboarding_status == 'approved'"/>
+                            <field name="birth_date"/>
+                            <field name="trainee_status"/>
+                        </group>
+                        <group string="المسار والمهارات">
+                            <field name="assigned_path"/>
+                            <field name="selected_skills"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
